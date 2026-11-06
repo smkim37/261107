@@ -19,9 +19,10 @@
   ];
 
   /* ---------- scaling ---------- */
+  var scale = 1;
   function fit() {
-    var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
-    stage.style.transform = "scale(" + s + ")";
+    scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    stage.style.transform = "scale(" + scale + ")";
   }
   window.addEventListener("resize", fit);
   fit();
@@ -79,6 +80,82 @@
     });
   }
 
+  /* ---------- morph ----------
+     Elements that carry the same data-morph key on two slides glide from
+     the old position and size to the new one instead of fading. Titles
+     are split into words so shared words move and the rest crossfade. */
+  function splitTitleWords() {
+    slides.forEach(function (sl) {
+      var t = sl.querySelector(".title");
+      if (!t) return;
+      var words = t.textContent.trim().split(/\s+/), seen = {};
+      t.textContent = "";
+      words.forEach(function (w, i) {
+        seen[w] = (seen[w] || 0) + 1;
+        var span = document.createElement("span");
+        span.className = "w";
+        span.setAttribute("data-morph", "t:" + w + ":" + seen[w]);
+        span.textContent = w;
+        if (i) t.appendChild(document.createTextNode(" "));
+        t.appendChild(span);
+      });
+    });
+  }
+
+  var morphTimer = null;
+  function morph(prev, next) {
+    if (!prev) return false;
+    var map = {};
+    Array.prototype.forEach.call(prev.querySelectorAll("[data-morph]"), function (e) { map[e.getAttribute("data-morph")] = e; });
+    var pairs = [];
+    Array.prototype.forEach.call(next.querySelectorAll("[data-morph]"), function (e) {
+      var p = map[e.getAttribute("data-morph")];
+      if (p) pairs.push({ from: p, to: e });
+    });
+    if (!pairs.length) return false;
+
+    next.classList.add("is-measuring");
+    pairs.forEach(function (pr) { pr.a = pr.from.getBoundingClientRect(); pr.b = pr.to.getBoundingClientRect(); });
+    next.classList.remove("is-measuring");
+
+    var fading = [];
+    pairs.forEach(function (pr) {
+      var dx = (pr.a.left - pr.b.left) / scale, dy = (pr.a.top - pr.b.top) / scale;
+      var sx = pr.a.width / pr.b.width, sy = pr.a.height / pr.b.height;
+      pr.to.classList.add("morph");
+      pr.to.style.transition = "none";
+      pr.to.style.transform = "translate(" + dx.toFixed(2) + "px," + dy.toFixed(2) + "px) scale(" + sx.toFixed(4) + "," + sy.toFixed(4) + ")";
+      pr.from.classList.add("morph-out");
+    });
+    pairs.forEach(function (pr) {
+      var anc = pr.to.parentElement;
+      while (anc && anc !== next) {
+        if (anc.hasAttribute("data-r") && !anc.classList.contains("no-reveal")) {
+          anc.classList.add("no-reveal");
+          Array.prototype.forEach.call(anc.querySelectorAll(".w"), function (w) {
+            if (!w.classList.contains("morph")) { w.classList.add("w-in"); fading.push(w); }
+          });
+        }
+        anc = anc.parentElement;
+      }
+    });
+    next.classList.add("morph-in");
+
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      pairs.forEach(function (pr) { pr.to.style.transition = ""; pr.to.style.transform = ""; });
+      fading.forEach(function (w) { w.classList.add("w-in-go"); });
+    }); });
+
+    clearTimeout(morphTimer);
+    morphTimer = setTimeout(function () {
+      pairs.forEach(function (pr) { pr.from.classList.remove("morph-out"); pr.to.classList.remove("morph"); });
+      fading.forEach(function (w) { w.classList.remove("w-in", "w-in-go"); });
+      Array.prototype.forEach.call(next.querySelectorAll(".no-reveal"), function (x) { x.classList.remove("no-reveal"); });
+      next.classList.remove("morph-in");
+    }, 900);
+    return true;
+  }
+
   /* ---------- navigation ---------- */
   function setFragments(slide, visible) {
     Array.prototype.forEach.call(slide.querySelectorAll(".fragment"), function (f) {
@@ -101,6 +178,7 @@
     }
     next.style.setProperty("--dir", dir);
     setFragments(next, dir < 0);
+    morph(prev, next);
     next.classList.add("is-active");
     idx = n;
 
@@ -206,6 +284,7 @@
   window.addEventListener("hashchange", function () { var n = fromHash(); if (n !== idx) go(n); });
 
   /* ---------- start ---------- */
+  splitTitleWords();
   buildRail();
   go(fromHash(), 1);
 
