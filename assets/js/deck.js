@@ -112,16 +112,21 @@
     document.title = (n + 1) + " / " + total + "  프로야구 선수를 꿈꿨던 AI 연구원";
   }
 
+  /* fragments sharing a data-frag value appear and disappear together */
+  function fragGroup(slide, f) {
+    var id = f.getAttribute("data-frag");
+    return id ? slide.querySelectorAll('.fragment[data-frag="' + id + '"]') : [f];
+  }
   function next() {
     var cur = slides[idx];
     var f = cur.querySelector(".fragment:not(.is-visible)");
-    if (f) { f.classList.add("is-visible"); return; }
+    if (f) { Array.prototype.forEach.call(fragGroup(cur, f), function (x) { x.classList.add("is-visible"); }); return; }
     go(idx + 1, 1);
   }
   function prev() {
     var cur = slides[idx];
     var vis = cur.querySelectorAll(".fragment.is-visible");
-    if (vis.length) { vis[vis.length - 1].classList.remove("is-visible"); return; }
+    if (vis.length) { Array.prototype.forEach.call(fragGroup(cur, vis[vis.length - 1]), function (x) { x.classList.remove("is-visible"); }); return; }
     go(idx - 1, -1);
   }
 
