@@ -29,8 +29,15 @@
   /* ---------- rail ---------- */
   var rail = stage.querySelector(".rail");
   var marks = [];
+  var railFill = null;
 
   function buildRail() {
+    var line = document.createElement("div");
+    line.className = "rail-line";
+    railFill = document.createElement("div");
+    railFill.className = "rail-fill";
+    line.appendChild(railFill);
+    rail.appendChild(line);
     chapters.forEach(function (c, k) {
       var m = document.createElement("div");
       m.className = "mark";
@@ -49,6 +56,7 @@
       m.classList.toggle("is-current", k === current);
       m.classList.toggle("is-past", k < current);
     });
+    railFill.style.width = (current < 0 ? 0 : current / (chapters.length - 1) * 100) + "%";
   }
 
   /* ---------- counters ---------- */
