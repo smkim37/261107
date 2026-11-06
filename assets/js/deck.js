@@ -109,7 +109,6 @@
     runCounters(next);
     if (history.replaceState) history.replaceState(null, "", "#" + (n + 1));
     else location.hash = "#" + (n + 1);
-    document.title = (n + 1) + " / " + total + "  프로야구 선수를 꿈꿨던 AI 연구원";
   }
 
   /* fragments sharing a data-frag value appear and disappear together */
