@@ -238,3 +238,19 @@ p, h1, h2, h3, figure { margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; transition-delay: 0s !important; }
 }
+
+/* Print mode (?print): every slide becomes one 1920 x 1080 page ------- */
+@page { size: 1920px 1080px; margin: 0; }
+html.print, html.print body { overflow: visible; height: auto; }
+html.print .viewport { position: static; overflow: visible; }
+html.print .stage { position: static; margin: 0; width: 1920px; height: auto; transform: none !important; overflow: visible; }
+html.print .slide {
+  position: relative; inset: auto; width: 1920px; height: 1080px;
+  opacity: 1 !important; visibility: visible !important; transform: none !important; transition: none !important;
+  break-after: page; page-break-after: always; overflow: hidden;
+}
+html.print .slide:last-of-type { break-after: auto; page-break-after: auto; }
+html.print [data-r], html.print .fragment, html.print .title .w { opacity: 1 !important; transform: none !important; transition: none !important; transition-delay: 0s !important; }
+html.print .photo img { transform: none !important; transition: none !important; }
+html.print .stage > .rail, html.print .zone, html.print .help { display: none !important; }
+html.print .slide .rail { display: block; }

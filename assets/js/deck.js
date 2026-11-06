@@ -283,9 +283,27 @@
 
   window.addEventListener("hashchange", function () { var n = fromHash(); if (n !== idx) go(n); });
 
+  /* ---------- print mode: ?print lays every slide out as a page ---------- */
+  function printMode() {
+    document.documentElement.classList.add("print");
+    slides.forEach(function (sl, i) {
+      setFragments(sl, true);
+      var r = rail.cloneNode(true);
+      var current = -1;
+      chapters.forEach(function (c, k) { if (i >= c.start) current = k; });
+      Array.prototype.forEach.call(r.querySelectorAll(".mark"), function (m, k) {
+        m.classList.toggle("is-current", k === current);
+        m.classList.toggle("is-past", k < current);
+      });
+      r.querySelector(".rail-fill").style.width = (current < 0 ? 0 : current / (chapters.length - 1) * 100) + "%";
+      sl.appendChild(r);
+    });
+  }
+
   /* ---------- start ---------- */
-  splitTitleWords();
   buildRail();
+  if (/[?&]print\b/.test(location.search)) { printMode(); return; }
+  splitTitleWords();
   go(fromHash(), 1);
 
 })();

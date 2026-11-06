@@ -70,6 +70,7 @@ assets/fonts/         Pretendard 가변 글꼴
 - 색: `assets/css/deck.css` 맨 위 `:root`의 `--bg`(배경), `--text`(글), `--accent`(강조색).
 - 타임라인 구간: `assets/js/deck.js`의 `chapters` 배열. `start`는 0부터 세는 슬라이드 번호입니다.
 - 브라우저 탭 제목: `index.html`의 `<title>`.
+- PDF로 뽑기: 주소 뒤에 `?print`를 붙이면 23장이 세로로 늘어선 인쇄용 화면이 됩니다. 그 상태에서 브라우저 인쇄(Ctrl+P 또는 Cmd+P)에서 PDF로 저장하면 글자가 살아 있는 PDF가 됩니다.
 
 고친 뒤 `main`에 push하면 GitHub Pages가 1~2분 안에 다시 배포합니다. 배포 상태는 저장소의 Actions 탭에서 "pages build and deployment"로 확인할 수 있습니다.
 
