@@ -24,7 +24,4 @@
 
 ## 글꼴
 
-- 본문: Pretendard (SIL Open Font License)
-- 제목: 마루 부리, 네이버 (SIL Open Font License)
-
-둘 다 `assets/fonts/`에 함께 들어 있어 외부 서버 없이 동작합니다.
+Pretendard (SIL Open Font License) 하나만 씁니다. `assets/fonts/`에 들어 있어 외부 서버 없이 동작합니다.

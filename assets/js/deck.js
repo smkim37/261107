@@ -28,33 +28,21 @@
 
   /* ---------- rail ---------- */
   var rail = stage.querySelector(".rail");
-  var railLine = rail.querySelector(".rail-line");
-  var railFill = document.getElementById("railFill");
-  var railDot = document.getElementById("railDot");
-  var folioCur = document.getElementById("folioCur");
-  var folioTot = document.getElementById("folioTot");
   var marks = [];
 
-  function pad(n) { return (n < 10 ? "0" : "") + n; }
-
   function buildRail() {
-    folioTot.textContent = pad(total);
-    chapters.forEach(function (c) {
+    chapters.forEach(function (c, k) {
       var m = document.createElement("div");
       m.className = "mark";
-      m.style.left = (c.start / (total - 1) * 100) + "%";
-      m.innerHTML = '<span class="mark-label">' + c.label + "</span>" +
+      m.style.left = (k / (chapters.length - 1) * 100) + "%";
+      m.innerHTML = '<span class="mark-label">' + c.label + '</span><span class="dot"></span>' +
                     (c.year ? '<span class="mark-year">' + c.year + "</span>" : "");
-      railLine.appendChild(m);
+      rail.appendChild(m);
       marks.push(m);
     });
   }
 
   function updateRail(i) {
-    var pct = i / (total - 1) * 100;
-    railFill.style.width = pct + "%";
-    railDot.style.left = pct + "%";
-    folioCur.textContent = pad(i + 1);
     var current = -1;
     chapters.forEach(function (c, k) { if (i >= c.start) current = k; });
     marks.forEach(function (m, k) {
