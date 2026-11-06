@@ -116,8 +116,6 @@ p, h1, h2, h3, figure { margin: 0; }
 .photo.doc img { object-fit: contain; }
 .photo.screen { background: #fff; }
 .photo.screen img { object-fit: contain; }
-.cutout { flex: 0 0 auto; }
-.cutout img { width: 100%; height: 100%; object-fit: contain; object-position: bottom; }
 .strip { display: flex; justify-content: center; align-items: flex-start; gap: 40px; margin-top: 48px; }
 
 /* Timeline rail ---------------------------------------------- */
@@ -177,8 +175,6 @@ p, h1, h2, h3, figure { margin: 0; }
 .s-cover .name { font-size: 36px; font-weight: 600; }
 .s-cover .name .latin { font-weight: 400; color: var(--text-2); margin-left: 16px; }
 .s-cover .date { margin-top: 18px; font-size: 28px; color: var(--text-2); }
-.s-cover .hint { margin-top: 72px; font-size: 22px; color: var(--text-3); transition: opacity .8s var(--ease); }
-.s-cover .hint.is-gone { opacity: 0; }
 
 /* About */
 .s-about .me-name { font-size: 72px; font-weight: 800; letter-spacing: -.03em; }

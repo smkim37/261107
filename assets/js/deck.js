@@ -209,6 +209,4 @@
   buildRail();
   go(fromHash(), 1);
 
-  var hint = document.getElementById("hint");
-  if (hint) setTimeout(function () { hint.classList.add("is-gone"); }, 6000);
 })();
